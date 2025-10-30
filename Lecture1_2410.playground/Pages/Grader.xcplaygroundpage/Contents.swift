@@ -8,6 +8,11 @@ func grader(percentages: (Int, Int, Int)) -> (((Double, Double, Double)) -> Int?
     // Return a closure that takes component scores
     return { scores in
         let (s1, s2, s3) = scores
+
+        // Check each score is 0–100
+        guard (0...100).contains(s1),
+              (0...100).contains(s2),
+              (0...100).contains(s3) else { return nil }
         
         // Compute total weighted points
         let totalPoints = s1 * Double(p1) / 100.0
@@ -38,11 +43,11 @@ if let g1 = grader(percentages: (60, 30, 10)) {
     print(g1((100.0, 11.0, 0.0)) ?? "N/A")
 }
 
-// Example (prints 1 5 4)
+// Example (prints 1 5 N/A)
 if let g2 = grader(percentages: (80, 20, 0)) {
     print(g2((40.0, 40.0, 40.0)) ?? "N/A")
     print(g2((100.0, 100.0, 100.0)) ?? "N/A")
-    print(g2((100.0, 11.0, 0.0)) ?? "N/A") // N/A ???
+    print(g2((100.0, 110.0, 0.0)) ?? "N/A")
 }
 
 // Example (prints "no grader")
