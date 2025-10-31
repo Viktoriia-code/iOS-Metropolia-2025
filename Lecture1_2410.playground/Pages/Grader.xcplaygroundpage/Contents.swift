@@ -36,27 +36,28 @@ func grader(percentages: (Int, Int, Int)) -> (((Double, Double, Double)) -> Int?
     }
 }
 
-// Example (prints 1 5 2)
+print("Example #1 prints 1 5 2:")
 if let g1 = grader(percentages: (60, 30, 10)) {
     print(g1((40.0, 40.0, 40.0)) ?? "N/A")
     print(g1((100.0, 100.0, 100.0)) ?? "N/A")
     print(g1((100.0, 11.0, 0.0)) ?? "N/A")
 }
 
-// Example (prints 1 5 N/A)
+print("\nExample #2 prints 1 5 N/A:")
 if let g2 = grader(percentages: (80, 20, 0)) {
     print(g2((40.0, 40.0, 40.0)) ?? "N/A")
     print(g2((100.0, 100.0, 100.0)) ?? "N/A")
     print(g2((100.0, 110.0, 0.0)) ?? "N/A")
 }
 
-// Example (prints "no grader")
+print("\nExample #3 prints no grader:")
 if let g3 = grader(percentages: (61, 30, 10)) {
     print(g3((40.0, 40.0, 40.0)) ?? "N/A")
 } else {
     print("no grader")
 }
 
+print("\nThe total point required for grades 1 to 5 in this course:")
 // Computes the minimum total points required for grades 1 to 5 in this course
 func minPoints(forFinalGrade grade: Int) -> Double {
     let threshold = Double(grade) - 0.5
