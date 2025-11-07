@@ -8,16 +8,23 @@
 import SwiftUI
 
 struct MemberList: View {
+    @StateObject var data = MemberData()
+    
     var body: some View {
         NavigationSplitView {
-            List(members) { member in
-                NavigationLink {
-                    MemberDetail(member: member)
-                } label: {
-                    MemberRow(member: member)
+            List {
+                ForEach(data.members) { member in
+                    NavigationLink {
+                        MemberDetail(member: member, viewModel: data.viewModel)
+                    } label: {
+                        MemberRow(member: member, viewModel: data.viewModel)
+                    }
                 }
             }
             .navigationTitle("Members")
+            .onAppear {
+                data.loadFromNetwork()
+            }
         } detail: {
             Text("Select a Member")
         }

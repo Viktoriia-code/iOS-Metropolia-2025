@@ -11,27 +11,43 @@ import MapKit
 
 struct MemberDetail: View {
     let member: Member
+    @ObservedObject var viewModel: MembersViewModel
     
     var body: some View {
         VStack {
             // Member location map
-            Map(initialPosition: .region(region)).frame(height: 290)
+            Map(initialPosition: .region(region)).frame(height: 250)
+            
+            MemberImage(member: member, size: 220)
+                .overlay {Circle().stroke(.white, lineWidth: 4)}
+                .shadow(radius: 7)
+                .offset(y: -130)
+                .padding(.bottom, -120)
             
             // Member image
             member.image
                 .scaledToFit()
-                .frame(width: 150, height: 150)
+                .frame(width: 80, height: 80)
                 .background(Color.white)
                 .clipShape(Circle())
-                .overlay {Circle().stroke(.white, lineWidth: 4)}
                 .shadow(radius: 7)
-                .offset(y: -140)
+                .offset(x: 85, y: -105)
                 .padding(.bottom, -270)
             
             // Member details
             VStack(alignment: .leading) {
-                Text("\(member.first) \(member.last)")
-                    .font(.title)
+                HStack {
+                    Text("\(member.first) \(member.last)")
+                        .font(.title)
+                    
+                    Button {
+                        viewModel.toggleFavorite(member: member)
+                    } label: {
+                        Image(systemName: viewModel.isFavorite(member: member) ? "star.fill" : "star")
+                            .foregroundStyle(viewModel.isFavorite(member: member) ? .yellow : .gray.opacity(0.7))
+                    }
+                }
+
                 
                 Divider()
                 
@@ -75,22 +91,41 @@ struct MemberDetail: View {
             span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
         )
     }
+    private func imageURL() -> URL? {
+        let base = "https://users.metropolia.fi/~peterh/edustajakuvat/"
+        
+        // Extract the last path component
+        let filename = URL(fileURLWithPath: member.picture).lastPathComponent
+        
+        // Remove versioning "-vXXXX" using regex
+        var cleaned = filename.replacingOccurrences(of: "-v\\d+", with: "", options: .regularExpression)
+        
+        // Ensure lowercase .jpg extension
+        cleaned = cleaned.replacingOccurrences(of: ".JPG", with: ".jpg")
+        
+        // Final URL
+        let finalURL = base + cleaned
+        print("Fetching image from:", finalURL)
+        return URL(string: finalURL)
+    }
+
+
 }
 
 #Preview {
-    /*let exampleMember = Member(
+    let sampleMember = Member(
         personNumber: 1099,
         seatNumber: 72,
         last: "Eloranta",
         first: "Eeva-Johanna",
         party: "sd",
         minister: false,
-        picture: "Eloranta-Eeva-Johanna",
+        picture:"attachment/member/pictures/Eloranta-Eeva-Johanna-web-v6995-1099.JPG",
         twitter: "https://twitter.com/elorantaeevajoh",
         bornYear: 1966,
-        constituency: "Varsinais-Suomi",
-        // coordinate: CLLocationCoordinate2D(latitude: 60.45, longitude: 22.27)
-    )*/
+        constituency: "Varsinais-Suomi"
+    )
     
-    MemberDetail(member: members[0])
+    let viewModel = MembersViewModel()
+    MemberDetail(member: sampleMember, viewModel: viewModel)
 }
