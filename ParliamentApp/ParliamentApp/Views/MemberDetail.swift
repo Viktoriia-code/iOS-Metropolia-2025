@@ -9,7 +9,7 @@ import SwiftUI
 import CoreLocation
 import MapKit
 
-struct Member: Identifiable {
+/*struct Member: Identifiable {
     var id: Int { personNumber }
     var personNumber: Int
     var seatNumber: Int
@@ -22,9 +22,9 @@ struct Member: Identifiable {
     var bornYear: Int
     var constituency: String
     var coordinate: CLLocationCoordinate2D
-}
+}*/
 
-struct MemberView: View {
+struct MemberDetail: View {
     let member: Member
     
     var body: some View {
@@ -33,11 +33,14 @@ struct MemberView: View {
             Map(initialPosition: .region(region)).frame(height: 290)
             
             // Member image
-            Image(member.picture)
+            member.image
+                .scaledToFit()
+                .frame(width: 150, height: 150)
+                .background(Color.white)
                 .clipShape(Circle())
                 .overlay {Circle().stroke(.white, lineWidth: 4)}
                 .shadow(radius: 7)
-                .offset(y: -200)
+                .offset(y: -140)
                 .padding(.bottom, -270)
             
             // Member details
@@ -81,14 +84,14 @@ struct MemberView: View {
     }
     private var region: MKCoordinateRegion {
         MKCoordinateRegion(
-            center: member.coordinate,
+            center: CLLocationCoordinate2D(latitude: 60.45, longitude: 22.27),
             span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
         )
     }
 }
 
 #Preview {
-    let exampleMember = Member(
+    /*let exampleMember = Member(
         personNumber: 1099,
         seatNumber: 72,
         last: "Eloranta",
@@ -99,8 +102,8 @@ struct MemberView: View {
         twitter: "https://twitter.com/elorantaeevajoh",
         bornYear: 1966,
         constituency: "Varsinais-Suomi",
-        coordinate: CLLocationCoordinate2D(latitude: 60.45, longitude: 22.27)
-    )
+        // coordinate: CLLocationCoordinate2D(latitude: 60.45, longitude: 22.27)
+    )*/
     
-    MemberView(member: exampleMember)
+    MemberDetail(member: members[0])
 }
