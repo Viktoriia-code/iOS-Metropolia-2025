@@ -1,5 +1,5 @@
 //
-//  MemberView.swift
+//  MemberDetail.swift
 //  ParliamentApp
 //
 //  Created by Viktoriia Beloborodova on 31.10.2025.
@@ -8,21 +8,6 @@
 import SwiftUI
 import CoreLocation
 import MapKit
-
-/*struct Member: Identifiable {
-    var id: Int { personNumber }
-    var personNumber: Int
-    var seatNumber: Int
-    var last: String
-    var first: String
-    var party: String
-    var minister: Bool
-    var picture: String
-    var twitter: String
-    var bornYear: Int
-    var constituency: String
-    var coordinate: CLLocationCoordinate2D
-}*/
 
 struct MemberDetail: View {
     let member: Member
@@ -77,8 +62,10 @@ struct MemberDetail: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
+            .navigationTitle("About \(member.first) \(member.last)")
+            .navigationBarTitleDisplayMode(.inline)
             .padding()
-
+            
             Spacer()
         }
     }
