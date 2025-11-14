@@ -41,6 +41,11 @@ class MemberData: ObservableObject {
         }.resume()
     }
     
+    init() {
+        let saved = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        self.favorites = Set(saved)
+    }
+    
     func toggleFavorite(member: Member) {
         if favorites.contains(member.personNumber) {
             favorites.remove(member.personNumber)
@@ -50,6 +55,7 @@ class MemberData: ObservableObject {
     }
 
     func isFavorite(member: Member) -> Bool {
-        favorites.contains(member.personNumber)
+        print(favorites)
+        return favorites.contains(member.personNumber)
     }
 }

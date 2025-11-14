@@ -8,12 +8,25 @@
 import SwiftUI
 
 struct MemberList: View {
-    @StateObject var data = MemberData()
+    @EnvironmentObject var data: MemberData
+    
+    @State private var showFavoritesOnly = false
+
+    var filteredMembers: [Member] {
+
+        data.members.filter { member in
+            !showFavoritesOnly || data.isFavorite(member: member)
+        }
+    }
     
     var body: some View {
         NavigationSplitView {
             List {
-                ForEach(data.members) { member in
+                Toggle(isOn: $showFavoritesOnly) {
+                    Text("Favorites only")
+                }
+                
+                ForEach(filteredMembers) { member in
                     NavigationLink {
                         MemberDetail(member: member, viewModel: data.viewModel)
                     } label: {
@@ -21,6 +34,7 @@ struct MemberList: View {
                     }
                 }
             }
+            .animation(.default, value: filteredMembers)
             .navigationTitle("Members")
             .onAppear {
                 data.loadFromNetwork()
@@ -33,4 +47,5 @@ struct MemberList: View {
 
 #Preview {
     MemberList()
+        .environmentObject(MemberData())
 }

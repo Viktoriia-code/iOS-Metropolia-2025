@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct ParliamentApp: App {
+    @StateObject private var memberData = MemberData()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(memberData)
         }
     }
 }
