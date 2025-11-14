@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MemberRow: View {
-    var member: Member
-    @ObservedObject var viewModel: MembersViewModel
+    @Bindable var member: Member
 
     var body: some View {
         
@@ -27,16 +27,17 @@ struct MemberRow: View {
             Spacer()
             
             Button {
-                viewModel.toggleFavorite(member: member)
+                member.favorite.toggle()
+                try? member.modelContext?.save()
             } label: {
-                Image(systemName: viewModel.isFavorite(member: member) ? "star.fill" : "star")
-                    .foregroundStyle(viewModel.isFavorite(member: member) ? .yellow : .gray.opacity(0.7))
+                Image(systemName: member.favorite ? "star.fill" : "star")
+                    .foregroundStyle(member.favorite ? .yellow : .gray.opacity(0.7))
             }
         }
     }
 }
 
-#Preview {
+/*#Preview {
     let sampleMember = Member(
         personNumber: 1099,
         seatNumber: 72,
@@ -50,6 +51,9 @@ struct MemberRow: View {
         constituency: "Varsinais-Suomi"
     )
     
-    let viewModel = MembersViewModel()
-    MemberRow(member: sampleMember, viewModel: viewModel)
-}
+    let container = ModelContainer(for: Member.self)
+    let context = ModelContext(container)
+    context.insert(sampleMember)
+    
+    MemberRow(member: sampleMember).modelContext(context)
+}*/

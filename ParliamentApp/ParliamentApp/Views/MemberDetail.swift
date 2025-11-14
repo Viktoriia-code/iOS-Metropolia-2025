@@ -10,8 +10,13 @@ import CoreLocation
 import MapKit
 
 struct MemberDetail: View {
-    let member: Member
-    @ObservedObject var viewModel: MembersViewModel
+    @Bindable var member: Member
+    @State private var newNote: String
+    
+    init(member: Member) {
+        self.member = member
+        self._newNote = State(initialValue: member.note)
+    }
     
     var body: some View {
         VStack {
@@ -41,10 +46,10 @@ struct MemberDetail: View {
                         .font(.title)
                     
                     Button {
-                        viewModel.toggleFavorite(member: member)
+                        member.favorite.toggle()
                     } label: {
-                        Image(systemName: viewModel.isFavorite(member: member) ? "star.fill" : "star")
-                            .foregroundStyle(viewModel.isFavorite(member: member) ? .yellow : .gray.opacity(0.7))
+                        Image(systemName: member.favorite ? "star.fill" : "star")
+                            .foregroundStyle(member.favorite ? .yellow : .gray.opacity(0.7))
                     }
                 }
 
@@ -82,6 +87,21 @@ struct MemberDetail: View {
             .navigationBarTitleDisplayMode(.inline)
             .padding()
             
+            .safeAreaInset(edge: .bottom) {
+                VStack(alignment: .center, spacing: 20) {
+                    Text("Note about \(member.first) \(member.last)")
+                        .font(.headline)
+                    TextField("Note", text: $newNote)
+                        .textFieldStyle(.roundedBorder)
+                    Button("Save") {
+                        member.note = newNote
+                    }
+                    .bold()
+                }
+            }
+            .padding()
+            .background(.bar)
+            
             Spacer()
         }
     }
@@ -112,7 +132,7 @@ struct MemberDetail: View {
 
 }
 
-#Preview {
+/*#Preview {
     let sampleMember = Member(
         personNumber: 1099,
         seatNumber: 72,
@@ -128,4 +148,4 @@ struct MemberDetail: View {
     
     let viewModel = MembersViewModel()
     MemberDetail(member: sampleMember, viewModel: viewModel)
-}
+}*/

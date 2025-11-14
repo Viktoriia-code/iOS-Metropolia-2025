@@ -7,10 +7,11 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
-struct Member: Hashable, Codable, Identifiable {
-    var id: Int { personNumber }
-    var personNumber: Int
+@Model
+class Member {
+    @Attribute(.unique) var personNumber: Int
     var seatNumber: Int
     var last: String
     var first: String
@@ -23,6 +24,36 @@ struct Member: Hashable, Codable, Identifiable {
     // var coordinate: CLLocationCoordinate2D
     var image: Image {
         Image(party)
+    }
+    var favorite: Bool
+    var note: String
+    
+    init(
+        personNumber: Int,
+        seatNumber: Int,
+        last: String,
+        first: String,
+        party: String,
+        minister: Bool,
+        picture: String,
+        twitter: String,
+        bornYear: Int,
+        constituency: String,
+        favorite: Bool = false,
+        note: String = ""
+    ) {
+        self.personNumber = personNumber
+        self.seatNumber = seatNumber
+        self.last = last
+        self.first = first
+        self.party = party
+        self.minister = minister
+        self.picture = picture
+        self.twitter = twitter
+        self.bornYear = bornYear
+        self.constituency = constituency
+        self.favorite = false
+        self.note = ""
     }
     
     /*private var coordinates: Coordinates

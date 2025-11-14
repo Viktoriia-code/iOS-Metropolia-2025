@@ -7,13 +7,23 @@
 
 import SwiftUI
 import Combine
+import SwiftData
 
 class MemberData: ObservableObject {
-    @Published var members: [Member] = []
-    let viewModel = MembersViewModel()
+    /*@Published var members: [Member] = []
+    let viewModel = MembersViewModel()*/
     @Published var favorites: Set<Int> = [] // store personNumber of favorites
     
-    func loadFromNetwork() {
+    let context: ModelContext
+
+    init(context: ModelContext) {
+        self.context = context
+        // Load favorites from UserDefaults
+        let saved = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
+        self.favorites = Set(saved)
+    }
+    
+    /*func loadFromNetwork() {
         guard let url = URL(string: "https://users.metropolia.fi/~peterh/mps.json") else {
             print("Invalid URL")
             return
@@ -39,12 +49,7 @@ class MemberData: ObservableObject {
                 print("Decoding error: \(error)")
             }
         }.resume()
-    }
-    
-    init() {
-        let saved = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
-        self.favorites = Set(saved)
-    }
+    }*/
     
     func toggleFavorite(member: Member) {
         if favorites.contains(member.personNumber) {

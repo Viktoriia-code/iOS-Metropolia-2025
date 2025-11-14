@@ -6,15 +6,30 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ParliamentApp: App {
-    @StateObject private var memberData = MemberData()
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Member.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+    
+    
+    //@StateObject private var memberData = MemberData()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(memberData)
+                .modelContainer(sharedModelContainer)
         }
     }
 }

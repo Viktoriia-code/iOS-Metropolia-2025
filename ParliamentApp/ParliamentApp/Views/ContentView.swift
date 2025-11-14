@@ -9,13 +9,14 @@ import SwiftUI
 import CoreLocation
 
 struct ContentView: View {
-
+    @Environment(\.modelContext) private var modelContext
+    
     var body: some View {
         MemberList()
-            .environmentObject(MemberData())
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: Member.self, inMemory: true)
 }
