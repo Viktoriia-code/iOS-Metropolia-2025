@@ -29,6 +29,8 @@ struct MemberImage: View {
                     .scaledToFill()
                     .frame(width: size, height: size)
                     .foregroundColor(.gray)
+                    .background(Color.white)
+                    .clipShape(Circle())
             @unknown default:
                 EmptyView()
             }

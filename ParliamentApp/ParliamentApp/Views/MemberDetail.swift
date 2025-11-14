@@ -105,7 +105,7 @@ struct MemberDetail: View {
         
         // Final URL
         let finalURL = base + cleaned
-        print("Fetching image from:", finalURL)
+        //print("Fetching image from:", finalURL)
         return URL(string: finalURL)
     }
 

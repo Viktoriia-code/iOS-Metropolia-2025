@@ -10,23 +10,10 @@ import SwiftUI
 struct MemberList: View {
     @EnvironmentObject var data: MemberData
     
-    @State private var showFavoritesOnly = false
-
-    var filteredMembers: [Member] {
-
-        data.members.filter { member in
-            !showFavoritesOnly || data.isFavorite(member: member)
-        }
-    }
-    
     var body: some View {
         NavigationSplitView {
             List {
-                Toggle(isOn: $showFavoritesOnly) {
-                    Text("Favorites only")
-                }
-                
-                ForEach(filteredMembers) { member in
+                ForEach(data.members) { member in
                     NavigationLink {
                         MemberDetail(member: member, viewModel: data.viewModel)
                     } label: {
@@ -34,7 +21,6 @@ struct MemberList: View {
                     }
                 }
             }
-            .animation(.default, value: filteredMembers)
             .navigationTitle("Members")
             .onAppear {
                 data.loadFromNetwork()

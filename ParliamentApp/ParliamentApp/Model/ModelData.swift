@@ -55,7 +55,6 @@ class MemberData: ObservableObject {
     }
 
     func isFavorite(member: Member) -> Bool {
-        print(favorites)
         return favorites.contains(member.personNumber)
     }
 }
