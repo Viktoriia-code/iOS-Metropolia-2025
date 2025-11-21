@@ -12,6 +12,7 @@ import MapKit
 struct MemberDetail: View {
     @Bindable var member: Member
     @State private var newNote: String
+    @FocusState private var isNoteFocused: Bool
     
     init(member: Member) {
         self.member = member
@@ -19,90 +20,84 @@ struct MemberDetail: View {
     }
     
     var body: some View {
-        VStack {
-            // Member location map
-            Map(initialPosition: .region(region)).frame(height: 250)
-            
-            MemberImage(member: member, size: 220)
-                .overlay {Circle().stroke(.white, lineWidth: 4)}
-                .shadow(radius: 7)
-                .offset(y: -130)
-                .padding(.bottom, -120)
-            
-            // Member image
-            member.image
-                .scaledToFit()
-                .frame(width: 80, height: 80)
-                .background(Color.white)
-                .clipShape(Circle())
-                .shadow(radius: 7)
-                .offset(x: 85, y: -105)
-                .padding(.bottom, -270)
-            
-            // Member details
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("\(member.first) \(member.last)")
-                        .font(.title)
+        ScrollView {
+            VStack {
+                // Member location map
+                Map(initialPosition: .region(region)).frame(height: 250)
+                
+                MemberImage(member: member, size: 220)
+                    .overlay {Circle().stroke(.white, lineWidth: 4)}
+                    .shadow(radius: 7)
+                    .offset(y: -130)
+                    .padding(.bottom, -120)
+                
+                // Member image
+                member.image
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .background(Color.white)
+                    .clipShape(Circle())
+                    .shadow(radius: 7)
+                    .offset(x: 85, y: -105)
+                    .padding(.bottom, -270)
+                
+                // Member details
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("\(member.first) \(member.last)")
+                            .font(.title)
+                        
+                        Button {
+                            member.favorite.toggle()
+                        } label: {
+                            Image(systemName: member.favorite ? "star.fill" : "star")
+                                .foregroundStyle(member.favorite ? .yellow : .gray.opacity(0.7))
+                        }
+                    }
+
                     
-                    Button {
-                        member.favorite.toggle()
-                    } label: {
-                        Image(systemName: member.favorite ? "star.fill" : "star")
-                            .foregroundStyle(member.favorite ? .yellow : .gray.opacity(0.7))
+                    Divider()
+                    
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("Party: \(member.party.uppercased())")
+                            Text("Constituency: \(member.constituency)")
+                            Text("Person Number: \(String(member.personNumber))")
+                            Text("Seat Number: \(member.seatNumber)")
+                            Text("Minister: \(member.minister ? "Yes" : "No")")
+                        }
+                        Spacer()
+                        Text("Born: \(String(member.bornYear))")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
-                }
+                    
+                    Divider()
 
-                
-                Divider()
-                
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text("Party: \(member.party.uppercased())")
-                        Text("Constituency: \(member.constituency)")
-                        Text("Person Number: \(String(member.personNumber))")
-                        Text("Seat Number: \(member.seatNumber)")
-                        Text("Minister: \(member.minister ? "Yes" : "No")")
+                    // Twitter link
+                    if let url = URL(string: member.twitter) {
+                        Link("Follow on Twitter", destination: url)
+                            .padding()
+                            .background(Color.blue)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    Spacer()
-                    Text("Born: \(String(member.bornYear))")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                
-                Divider()
 
-                // Twitter link
-                if let url = URL(string: member.twitter) {
-                    Link("Follow on Twitter", destination: url)
-                        .padding()
-                        .background(Color.blue)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
+                    HStack(alignment: .center, spacing: 20) {
+                        Text("Note:").font(.headline)
+                        TextField("Note about \(member.first)", text: $newNote)
+                            .textFieldStyle(.roundedBorder)
+                            .focused($isNoteFocused)
+                        Button("Save") {member.note = newNote}.bold()
+                    }
+
+                }.padding()
+
             }
             .navigationTitle("About \(member.first) \(member.last)")
             .navigationBarTitleDisplayMode(.inline)
-            .padding()
-            
-            .safeAreaInset(edge: .bottom) {
-                VStack(alignment: .center, spacing: 20) {
-                    Text("Note about \(member.first) \(member.last)")
-                        .font(.headline)
-                    TextField("Note", text: $newNote)
-                        .textFieldStyle(.roundedBorder)
-                    Button("Save") {
-                        member.note = newNote
-                    }
-                    .bold()
-                }
-            }
-            .padding()
-            .background(.bar)
-            
-            Spacer()
         }
     }
     private var region: MKCoordinateRegion {

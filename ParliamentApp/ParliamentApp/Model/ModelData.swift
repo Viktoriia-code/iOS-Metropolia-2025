@@ -9,57 +9,25 @@ import SwiftUI
 import Combine
 import SwiftData
 
-class MemberData: ObservableObject {
-    /*@Published var members: [Member] = []
-    let viewModel = MembersViewModel()*/
-    @Published var favorites: Set<Int> = [] // store personNumber of favorites
-    
+/*class MemberData: ObservableObject {
     let context: ModelContext
-
+    
     init(context: ModelContext) {
         self.context = context
-        // Load favorites from UserDefaults
-        let saved = UserDefaults.standard.array(forKey: "favorites") as? [Int] ?? []
-        self.favorites = Set(saved)
     }
-    
-    /*func loadFromNetwork() {
-        guard let url = URL(string: "https://users.metropolia.fi/~peterh/mps.json") else {
-            print("Invalid URL")
-            return
-        }
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Network error: \(error)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data returned from server")
-                return
-            }
-            
-            do {
-                let decodedMembers = try JSONDecoder().decode([Member].self, from: data)
-                DispatchQueue.main.async {
-                    self.members = decodedMembers
-                }
-            } catch {
-                print("Decoding error: \(error)")
-            }
-        }.resume()
-    }*/
     
     func toggleFavorite(member: Member) {
-        if favorites.contains(member.personNumber) {
-            favorites.remove(member.personNumber)
-        } else {
-            favorites.insert(member.personNumber)
-        }
+        member.favorite.toggle()
+        try? context.save() // persist change
     }
-
+    
     func isFavorite(member: Member) -> Bool {
-        return favorites.contains(member.personNumber)
+        return member.favorite
     }
-}
+    
+    // Optional: fetch all favorites
+    func fetchFavorites() -> [Member] {
+        let request = FetchDescriptor<Member>(predicate: #Predicate { $0.favorite == true })
+        return (try? context.fetch(request)) ?? []
+    }
+}*/

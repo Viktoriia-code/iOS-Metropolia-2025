@@ -10,4 +10,3 @@ import Foundation
 class MembersViewModel: ObservableObject {
     @Published var members: [Member] = []
 }
-

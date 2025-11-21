@@ -21,10 +21,7 @@ class Member {
     var twitter: String
     var bornYear: Int
     var constituency: String
-    // var coordinate: CLLocationCoordinate2D
-    var image: Image {
-        Image(party)
-    }
+    var image: Image {Image(party)}
     var favorite: Bool
     var note: String
     
@@ -55,17 +52,5 @@ class Member {
         self.favorite = false
         self.note = ""
     }
-    
-    /*private var coordinates: Coordinates
-    var locationCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude)
-    }
-    
-    struct Coordinates: Hashable, Codable {
-        var latitude: Double
-        var longitude: Double
-    }*/
 }
 
