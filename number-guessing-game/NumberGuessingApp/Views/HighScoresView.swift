@@ -12,6 +12,10 @@ struct HighScoresView: View {
     @Query(sort: \ScoreEntry.attempts, order: .forward) private var entries: [ScoreEntry]
     @State private var selectedName = ""
     
+    var playerNames: [String] {
+        Array(Set(entries.map { $0.playerName })).sorted()
+    }
+    
     var body: some View {
         ZStack {
             LinearGradient(
@@ -36,11 +40,16 @@ struct HighScoresView: View {
                 }
                 
                 Picker("Player", selection: $selectedName) {
-                    ForEach(Array(Set(entries.map { $0.playerName })), id: \.self) { name in
+                    ForEach(playerNames, id: \.self) { name in
                         Text(name)
                     }
                 }
                 .pickerStyle(.menu)
+                .onAppear {
+                    if selectedName.isEmpty, let first = playerNames.first {
+                        selectedName = first
+                    }
+                }
                 
                 Text("Top five for \(selectedName)")
                     .font(.title3)
